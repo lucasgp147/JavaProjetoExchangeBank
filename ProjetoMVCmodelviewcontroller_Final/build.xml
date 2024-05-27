@@ -1,0 +1,46 @@
+<project name="CryptoExchange" default="run" basedir=".">
+    <!-- Definição dos diretórios -->
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="lib.dir" value="lib"/>
+
+    <!-- Criação dos diretórios de build -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${dist.dir}"/>
+    </target>
+
+    <!-- Compilação do código-fonte -->
+    <target name="compile" depends="init">
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" debug="true">
+            <classpath>
+                <fileset dir="${lib.dir}">
+                    <include name="postgresql-*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <!-- Empacotamento do JAR -->
+    <target name="jar" depends="compile">
+        <jar destfile="${dist.dir}/CryptoExchange.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="view.MainView"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Execução do projeto -->
+    <target name="run" depends="jar">
+        <java jar="${dist.dir}/CryptoExchange.jar" fork="true"/>
+    </target>
+
+    <!-- Limpeza dos arquivos compilados -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>
+</project>
